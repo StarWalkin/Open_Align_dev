@@ -136,8 +136,8 @@ class Template:
         total_length = 0
         for i in range(0, len(encoded_messages), 2):
             if total_length >= cutoff_len:
+                print(f"The input is too long, truncated to {cutoff_len} tokens.")
                 break
-
             max_source_len, max_target_len = infer_max_len(
                 source_len=len(encoded_messages[i]),
                 target_len=len(encoded_messages[i + 1]),
