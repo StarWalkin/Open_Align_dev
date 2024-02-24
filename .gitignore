@@ -1,7 +1,7 @@
 # .gitignore
 
-**/data/
-**/data/
+**/data/tulu-v2-sft-mixture/*.json
+**/data/tulu-v2-sft-mixture/*.jsonl
 
 .DS_Store
 .idea/
