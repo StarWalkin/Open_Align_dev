@@ -7,9 +7,22 @@ if [ -z "${BASH_VERSION}" ]; then
 	exit 1
 fi
 
+# set some arguments here
 ckpts_dir="/cpfs01/shared/GAIR/GAIR_hdd/ckpts"
 output_dir="/cpfs01/user/liupengfei/yguo/ckpts"
+BASE_MODEL=${ckpts_dir}/llama-2/7b
 OUTPUT_DIR=${output_dir}/llama2-sft-tulu2
+NUM_GPUS=8
+BATCH_SIZE_PER_GPU=4
+TOTAL_BATCH_SIZE=128
+GRADIENT_ACC_STEPS=$(($TOTAL_BATCH_SIZE/$NUM_GPUS/$BATCH_SIZE_PER_GPU))
+
+echo "base model path: ${OUTPUT_DIR}\
+      GPU number: ${NUM_GPUS}\
+      batch size per GPU: ${BATCH_SIZE_PER_GPU}\
+      gradient accumulation steps: ${GRADIENT_ACC_STEPS}\
+      output path: ${OUTPUT_DIR}
+      "
 
 mkdir -p "${OUTPUT_DIR}"
 OUTPUT_DIR="$(cd "${OUTPUT_DIR}" &>/dev/null && pwd)"
@@ -27,7 +40,7 @@ deepspeed --include localhost:0,1,2,3,4,5,6,7 --master_port=9901 src/train_bash.
     --deepspeed ds_config.json \
     --stage sft \
     --do_train True\
-    --model_name_or_path ${ckpts_dir}/llama-2/13b/ \
+    --model_name_or_path ${BASE_MODEL} \
     --dataset tulu-v2-sft-mixture \
     --template default \
     --cutoff_len 8192 \
@@ -35,15 +48,15 @@ deepspeed --include localhost:0,1,2,3,4,5,6,7 --master_port=9901 src/train_bash.
     --temperature 0 \
     --output_dir ${OUTPUT_DIR} \
     --overwrite_cache \
-    --per_device_train_batch_size 16 \
+    --per_device_train_batch_size ${BATCH_SIZE_PER_GPU} \
     --weight_decay 0.0 \
-    --gradient_accumulation_steps 4 \
-    --lr_scheduler_type constant_with_warmup??? \
+    --gradient_accumulation_steps ${GRADIENT_ACC_STEPS} \
+    --lr_scheduler_type linear \
     --warmup_ratio 0.03 \
-    --logging_steps 10 \
+    --logging_steps 1 \
     --save_steps 1000 \
     --learning_rate 2e-5 \
     --num_train_epochs 2 \
     --plot_loss \
-    --report_to
+    --report_to "wandb"\
     --bf16 True
