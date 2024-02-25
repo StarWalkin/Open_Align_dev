@@ -1,5 +1,6 @@
 from opencompass.openicl.icl_prompt_template import PromptTemplate
 from opencompass.openicl.icl_retriever import FixKRetriever
+from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets import MMLUDataset
@@ -103,6 +104,7 @@ for _name in mmlu_all_sets:
             ice_token="</E>",
         ),
         retriever=dict(type=FixKRetriever, fix_id_list=[0, 1, 2, 3, 4]),
+        # retriever=dict(type=ZeroRetriever),
         inferencer=dict(type=GenInferencer),
     )
 
