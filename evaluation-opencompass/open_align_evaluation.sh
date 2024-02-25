@@ -6,7 +6,7 @@ TOKENIZER_PATH=$MODEL_PATH
 
 # mmlu 0-shot evaluation
 python run.py
---datasets mmlu_gen gsm8k_gen bbh_gen tydiqa_gen  \
+--datasets mmlu_gen gsm8k_gen bbh_gen  \
 --hf-path $MODEL_PATH \  # HuggingFace 模型地址
 --tokenizer-path $TOKENIZER_PATH \  # HuggingFace 模型地址
 --model-kwargs device_map='auto' trust_remote_code=True \  # 构造 model 的参数

@@ -103,8 +103,8 @@ for _name in mmlu_all_sets:
             ),
             ice_token="</E>",
         ),
-        retriever=dict(type=FixKRetriever, fix_id_list=[0, 1, 2, 3, 4]),
-        # retriever=dict(type=ZeroRetriever),
+        # retriever=dict(type=FixKRetriever, fix_id_list=[0, 1, 2, 3, 4]),
+        retriever=dict(type=ZeroRetriever),
         inferencer=dict(type=GenInferencer),
     )
 

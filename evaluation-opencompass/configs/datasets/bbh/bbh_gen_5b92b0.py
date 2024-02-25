@@ -1,6 +1,7 @@
 import os
 from opencompass.openicl.icl_prompt_template import PromptTemplate
 from opencompass.openicl.icl_retriever import ZeroRetriever
+from opencompass.openicl.icl_retriever import FixKRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets import BBHDataset, BBHEvaluator, bbh_mcq_postprocess, BBHEvaluator_mcq
@@ -84,7 +85,8 @@ for _name in bbh_free_form_sets:
                     f"Follow the given examples and answer the question.\n{_hint}\n\nQ: {{input}}\nA: Let's think step by step."
                 )
             ])),
-        retriever=dict(type=ZeroRetriever),
+        # retriever=dict(type=ZeroRetriever),
+        retriever=dict(type=FixKRetriever, fix_id_list=[0, 1, 2]),
         inferencer=dict(type=GenInferencer, max_out_len=512))
     bbh_eval_cfg = dict(evaluator=dict(type=BBHEvaluator), pred_role="BOT")
 
